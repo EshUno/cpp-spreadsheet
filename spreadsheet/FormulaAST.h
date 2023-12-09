@@ -5,7 +5,11 @@
 
 #include <forward_list>
 #include <functional>
+#include <istream>
+#include <memory>
+#include <ostream>
 #include <stdexcept>
+#include <string>
 
 namespace ASTImpl {
 class Expr;
@@ -23,7 +27,7 @@ public:
     FormulaAST& operator=(FormulaAST&&) = default;
     ~FormulaAST();
 
-    double Execute(/*добавьте нужные аргументы*/ args) const;
+    double Execute(const std::function<double(Position)>& func) const;
     void PrintCells(std::ostream& out) const;
     void Print(std::ostream& out) const;
     void PrintFormula(std::ostream& out) const;
@@ -32,7 +36,7 @@ public:
         return cells_;
     }
 
-    const std::forward_list<Position>& GetCells() const {
+    [[nodiscard]] const std::forward_list<Position>& GetCells() const {
         return cells_;
     }
 
@@ -45,5 +49,5 @@ private:
     std::forward_list<Position> cells_;
 };
 
-FormulaAST ParseFormulaAST(std::istream& in);
+FormulaAST ParseFormulaAST(std::istream& in_str);
 FormulaAST ParseFormulaAST(const std::string& in_str);

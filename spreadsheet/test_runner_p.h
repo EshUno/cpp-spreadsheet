@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <map>
 #include <set>
@@ -21,7 +23,7 @@ std::ostream& PrintMap(std::ostream& os, const Map<K, V>& m) {
     }
     return os << "}";
 }
-}  // namespace TestRunnerPrivate
+}
 
 template <class T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& s) {
@@ -109,18 +111,20 @@ private:
 #define FILE_NAME __FILE__
 #endif
 
-#define ASSERT_EQUAL(x, y)                                                                       \
-    {                                                                                            \
-        std::ostringstream __assert_equal_private_os;                                            \
-        __assert_equal_private_os << #x << " != " << #y << ", " << FILE_NAME << ":" << __LINE__; \
-        AssertEqual(x, y, __assert_equal_private_os.str());                                      \
-    }
+#define ASSERT_EQUAL(x, y)                                               \
+{                                                                      \
+        std::ostringstream __assert_equal_private_os;                        \
+        __assert_equal_private_os << #x << " != " << #y << ", " << FILE_NAME \
+        << ":" << __LINE__;                        \
+        AssertEqual(x, y, __assert_equal_private_os.str());                  \
+}
 
-#define ASSERT(x)                                                                   \
-    {                                                                               \
-        std::ostringstream __assert_private_os;                                     \
-        __assert_private_os << #x << " is false, " << FILE_NAME << ":" << __LINE__; \
-        Assert(x, __assert_private_os.str());                                       \
-    }
+#define ASSERT(x)                                                  \
+{                                                                \
+        std::ostringstream __assert_private_os;                        \
+        __assert_private_os << #x << " is false, " << FILE_NAME << ":" \
+        << __LINE__;                               \
+        Assert(x, __assert_private_os.str());                          \
+}
 
 #define RUN_TEST(tr, func) tr.RunTest(func, #func)

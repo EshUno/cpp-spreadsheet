@@ -7,6 +7,7 @@
 #include <string_view>
 #include <variant>
 #include <vector>
+#include <functional>
 
 // Позиция ячейки. Индексация с нуля.
 struct Position {
@@ -26,6 +27,22 @@ struct Position {
     static const Position NONE;
 };
 
+namespace std
+{
+
+template <>
+struct hash<Position>
+{
+    std::size_t operator()(const Position& s) const noexcept
+    {
+        const std::size_t hc = std::hash<int>{}(s.row);
+        const std::size_t hr = std::hash<int>{}(s.col);
+        return hc ^ (hr << 1);
+    }
+};
+
+}
+
 struct Size {
     int rows = 0;
     int cols = 0;
@@ -42,9 +59,9 @@ public:
         Div0,  // в результате вычисления возникло деление на ноль
     };
 
-    FormulaError(Category category);
+    FormulaError(Category category):category_(category){}
 
-    Category GetCategory() const;
+    [[nodiscard]] Category GetCategory() const;
 
     bool operator==(FormulaError rhs) const;
 
